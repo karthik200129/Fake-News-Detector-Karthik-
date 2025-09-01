@@ -1,0 +1,1418 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Fake News Prediction</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="" />
+
+	<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+	
+	<!-- Animate.css -->
+	<link rel="stylesheet" type="text/css" href="static/css/animate.css">
+	<!-- Icomoon Icon Fonts-->
+	<link rel="stylesheet" type="text/css" href="static/css/icomoon.css">
+	<!-- Bootstrap  -->
+	<link rel="stylesheet" type="text/css" href="static/css/bootstrap.css">
+
+	<!-- Magnific Popup -->
+	<link rel="stylesheet" type="text/css" href="static/css/magnific-popup.css">
+
+	<!-- Flexslider  -->
+	<link rel="stylesheet" type="text/css" href="static/css/flexslider.css">
+
+	<!-- Owl Carousel -->
+	<link rel="stylesheet" type="text/css" href="static/css/owl.carousel.min.css">
+	<link rel="stylesheet" type="text/css" href="static/css/owl.theme.default.min.css">
+	
+	<!-- Flaticons  -->
+	<link rel="stylesheet" type="text/css" href="static/fonts/flaticon/font/flaticon.css">
+
+	<!-- Theme style  -->
+	<link rel="stylesheet" type="text/css" href="static/css/style.css">
+
+	<!-- Custom CS Style -->
+	<style>
+		:root {
+			--primary-dark: #0d1117;
+			--secondary-dark: #161b22;
+			--accent-blue: #58a6ff;
+			--accent-green: #7c3aed;
+			--accent-purple: #a855f7;
+			--text-primary: #f0f6fc;
+			--text-secondary: #8b949e;
+			--border-color: #30363d;
+			--success-green: #238636;
+			--warning-red: #dc2626;
+		--warning-red-light: #fca5a5;
+		--warning-bg: #fef2f2;
+			--code-bg: #1c2128;
+		}
+
+		body {
+			background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+			color: var(--text-primary);
+			font-family: 'Inter', sans-serif;
+			min-height: 100vh;
+		}
+
+		.colorlib-loader {
+			background: var(--primary-dark);
+		}
+
+		.colorlib-nav {
+			background: rgba(13, 17, 23, 0.95);
+			backdrop-filter: blur(10px);
+			border-bottom: 1px solid var(--border-color);
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+		}
+
+		#colorlib-logo a {
+			font-family: 'JetBrains Mono', monospace;
+			font-weight: 700;
+			color: var(--accent-blue);
+			text-decoration: none;
+			font-size: 1.5rem;
+			letter-spacing: -0.5px;
+		}
+
+		#colorlib-logo a:hover {
+			color: var(--accent-purple);
+			text-shadow: 0 0 10px var(--accent-purple);
+			transition: all 0.3s ease;
+		}
+
+		.top-menu ul li a {
+			color: var(--text-secondary);
+			font-weight: 500;
+			padding: 15px 20px;
+			transition: all 0.3s ease;
+			position: relative;
+		}
+
+		.top-menu ul li a:hover,
+		.top-menu ul li.active a {
+			color: var(--accent-blue);
+			background: rgba(88, 166, 255, 0.1);
+			border-radius: 8px;
+		}
+
+		.top-menu ul li a::before {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 50%;
+			width: 0;
+			height: 2px;
+			background: var(--accent-blue);
+			transition: all 0.3s ease;
+			transform: translateX(-50%);
+		}
+
+		.top-menu ul li a:hover::before,
+		.top-menu ul li.active a::before {
+			width: 80%;
+		}
+
+		.colorlib-intro {
+			background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 50%, var(--primary-dark) 100%);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.colorlib-intro::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: 
+				radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+				radial-gradient(circle at 80% 50%, rgba(88, 166, 255, 0.1) 0%, transparent 50%),
+				linear-gradient(45deg, transparent 30%, rgba(168, 85, 247, 0.05) 50%, transparent 70%);
+			pointer-events: none;
+		}
+
+		.intro h1 {
+			font-family: 'Inter', sans-serif;
+			font-weight: 700;
+			font-size: 3.5rem;
+			margin-bottom: 2rem;
+			background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+			text-shadow: none;
+		}
+
+		.intro h1 span {
+			background: linear-gradient(135deg, var(--accent-green), var(--accent-purple));
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+			font-family: 'JetBrains Mono', monospace;
+			padding: 8px 16px;
+			border: 2px solid var(--accent-purple);
+			border-radius: 8px;
+			display: inline-block;
+			position: relative;
+		}
+
+		.intro h1 span::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(168, 85, 247, 0.1);
+			border-radius: 6px;
+			z-index: -1;
+		}
+
+		.intro p {
+			font-size: 1.2rem;
+			color: var(--text-secondary);
+			line-height: 1.6;
+			max-width: 600px;
+			margin: 0 auto;
+		}
+
+		.form-control {
+			background: var(--code-bg);
+			border: 2px solid var(--border-color);
+			color: var(--text-primary);
+			border-radius: 12px;
+			padding: 20px;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 14px;
+			line-height: 1.5;
+			transition: all 0.3s ease;
+			resize: vertical;
+		}
+
+		.form-control:focus {
+			background: var(--code-bg);
+			border-color: var(--accent-blue);
+			box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+			color: var(--text-primary);
+			outline: none;
+		}
+
+		.form-control::placeholder {
+			color: var(--text-secondary);
+		}
+
+		.btn-primary {
+			background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+			border: none;
+			color: white;
+			padding: 12px 32px;
+			border-radius: 8px;
+			font-weight: 600;
+			font-size: 16px;
+			transition: all 0.3s ease;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.btn-primary::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: -100%;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+			transition: left 0.5s;
+		}
+
+		.btn-primary:hover::before {
+			left: 100%;
+		}
+
+		.btn-primary:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 25px rgba(88, 166, 255, 0.3);
+		}
+
+		.btn-outline {
+			background: transparent;
+			border: 2px solid var(--accent-blue);
+			color: var(--accent-blue);
+		}
+
+		.btn-outline:hover {
+			background: var(--accent-blue);
+			color: white;
+			transform: translateY(-2px);
+			box-shadow: 0 8px 25px rgba(88, 166, 255, 0.3);
+		}
+
+		#colorlib-hero {
+			background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--primary-dark) 100%);
+			border-top: 1px solid var(--border-color);
+			border-bottom: 1px solid var(--border-color);
+		}
+
+		.flexslider {
+			border-radius: 16px;
+			overflow: hidden;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+		}
+
+		#colorlib-services {
+			background: var(--secondary-dark);
+			border-top: 1px solid var(--border-color);
+		}
+
+		.colorlib-heading h2 {
+			font-family: 'Inter', sans-serif;
+			font-weight: 700;
+			font-size: 2.5rem;
+			color: var(--text-primary);
+			margin-bottom: 1rem;
+		}
+
+		.colorlib-heading p {
+			color: var(--text-secondary);
+			font-size: 1.1rem;
+			line-height: 1.6;
+		}
+
+		.services {
+			background: var(--code-bg);
+			padding: 40px 30px;
+			border-radius: 16px;
+			border: 1px solid var(--border-color);
+			transition: all 0.3s ease;
+			height: 100%;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.services::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 4px;
+			background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+		}
+
+		.services:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+			border-color: var(--accent-blue);
+		}
+
+		.services .icon {
+			background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+			width: 80px;
+			height: 80px;
+			border-radius: 16px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 0 auto 20px;
+			font-size: 2rem;
+			color: white;
+			box-shadow: 0 8px 20px rgba(88, 166, 255, 0.3);
+		}
+
+		.services h3 {
+			color: var(--text-primary);
+			font-weight: 600;
+			font-size: 1.3rem;
+			margin-bottom: 15px;
+			font-family: 'Inter', sans-serif;
+		}
+
+		.services p {
+			color: var(--text-secondary);
+			line-height: 1.6;
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 13px;
+			background: var(--primary-dark);
+			padding: 15px;
+			border-radius: 8px;
+			border-left: 4px solid var(--accent-blue);
+		}
+
+		#colorlib-footer {
+			background: var(--primary-dark);
+			border-top: 1px solid var(--border-color);
+		}
+
+		.copy {
+			color: var(--text-secondary);
+		}
+
+		.copy a {
+			color: var(--accent-blue);
+			text-decoration: none;
+		}
+
+		.copy a:hover {
+			color: var(--accent-purple);
+		}
+
+		.gototop {
+			background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+			border-radius: 12px;
+			box-shadow: 0 8px 20px rgba(88, 166, 255, 0.3);
+		}
+
+		.gototop:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 12px 25px rgba(88, 166, 255, 0.4);
+		}
+
+		/* Prediction Result Styling */
+		.btn-primary strong {
+			font-family: 'JetBrains Mono', monospace;
+			letter-spacing: 1px;
+		}
+
+		/* Code Block Styling for Preprocessed Text */
+		.services p {
+			max-height: 200px;
+			overflow-y: auto;
+			scrollbar-width: thin;
+			scrollbar-color: var(--accent-blue) var(--primary-dark);
+		}
+
+		.services p::-webkit-scrollbar {
+			width: 6px;
+		}
+
+		.services p::-webkit-scrollbar-track {
+			background: var(--primary-dark);
+		}
+
+		.services p::-webkit-scrollbar-thumb {
+			background: var(--accent-blue);
+			border-radius: 3px;
+		}
+
+		/* Enhanced Background Effects */
+		.matrix-bg, .circuit-bg {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			z-index: -3;
+		}
+
+		.matrix-bg {
+			opacity: 0.08;
+		}
+
+		.circuit-bg {
+			opacity: 0.05;
+			z-index: -2;
+		}
+
+		.floating-particles {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			z-index: -1;
+			overflow: hidden;
+		}
+
+		.particle {
+			position: absolute;
+			width: 4px;
+			height: 4px;
+			background: var(--accent-blue);
+			border-radius: 50%;
+			animation: float-particle 15s linear infinite;
+			opacity: 0.6;
+		}
+
+		.particle:nth-child(even) {
+			background: var(--accent-purple);
+			animation-duration: 20s;
+		}
+
+		.particle:nth-child(3n) {
+			background: var(--accent-green);
+			animation-duration: 12s;
+		}
+
+		@keyframes float-particle {
+			0% {
+				transform: translateY(100vh) translateX(0) rotate(0deg);
+				opacity: 0;
+			}
+			10% {
+				opacity: 0.8;
+			}
+			90% {
+				opacity: 0.8;
+			}
+			100% {
+				transform: translateY(-100px) translateX(200px) rotate(360deg);
+				opacity: 0;
+			}
+		}
+
+		.neural-network {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			z-index: -1;
+			background: 
+				radial-gradient(circle at 10% 20%, rgba(88, 166, 255, 0.03) 0%, transparent 30%),
+				radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.03) 0%, transparent 30%),
+				radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.02) 0%, transparent 40%);
+			animation: neural-pulse 8s ease-in-out infinite;
+		}
+
+		@keyframes neural-pulse {
+			0%, 100% {
+				opacity: 0.5;
+				transform: scale(1);
+			}
+			50% {
+				opacity: 1;
+				transform: scale(1.05);
+			}
+		}
+
+		/* Enhanced colorlib-intro background */
+		.colorlib-intro {
+			background: 
+				linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 50%, var(--primary-dark) 100%),
+				radial-gradient(ellipse at top, rgba(88, 166, 255, 0.05) 0%, transparent 50%),
+				radial-gradient(ellipse at bottom, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.colorlib-intro::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: 
+				radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.08) 0%, transparent 40%),
+				radial-gradient(circle at 80% 70%, rgba(88, 166, 255, 0.08) 0%, transparent 40%),
+				linear-gradient(45deg, transparent 30%, rgba(168, 85, 247, 0.03) 50%, transparent 70%);
+			pointer-events: none;
+			animation: bg-shift 10s ease-in-out infinite;
+		}
+
+		@keyframes bg-shift {
+			0%, 100% {
+				transform: translateX(0) translateY(0);
+			}
+			33% {
+				transform: translateX(20px) translateY(-10px);
+			}
+			66% {
+				transform: translateX(-20px) translateY(10px);
+			}
+		}
+
+		/* Animated grid pattern */
+		.colorlib-intro::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-image: 
+				linear-gradient(rgba(88, 166, 255, 0.05) 1px, transparent 1px),
+				linear-gradient(90deg, rgba(88, 166, 255, 0.05) 1px, transparent 1px);
+			background-size: 50px 50px;
+			animation: grid-move 20s linear infinite;
+			pointer-events: none;
+			opacity: 0.3;
+		}
+
+		@keyframes grid-move {
+			0% {
+				transform: translate(0, 0);
+			}
+			100% {
+				transform: translate(50px, 50px);
+			}
+		}
+
+		/* Services background enhancement */
+		#colorlib-services {
+			background: 
+				var(--secondary-dark),
+				radial-gradient(circle at 30% 20%, rgba(124, 58, 237, 0.05) 0%, transparent 50%),
+				radial-gradient(circle at 70% 80%, rgba(88, 166, 255, 0.05) 0%, transparent 50%);
+			border-top: 1px solid var(--border-color);
+			position: relative;
+		}
+
+		#colorlib-services::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: 
+				repeating-linear-gradient(
+					90deg,
+					transparent,
+					transparent 98px,
+					rgba(88, 166, 255, 0.03) 100px
+				);
+			animation: scan-line 15s linear infinite;
+			pointer-events: none;
+		}
+
+		@keyframes scan-line {
+			0% {
+				transform: translateX(-100%);
+			}
+			100% {
+				transform: translateX(100%);
+			}
+		}
+
+		/* Enhanced services cards with circuit patterns */
+		.services::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 80px;
+			height: 80px;
+			background: 
+				linear-gradient(90deg, var(--accent-blue) 1px, transparent 1px),
+				linear-gradient(0deg, var(--accent-blue) 1px, transparent 1px),
+				radial-gradient(circle at 70% 30%, var(--accent-purple) 2px, transparent 2px);
+			background-size: 15px 15px, 15px 15px, 30px 30px;
+			opacity: 0.1;
+			border-radius: 0 16px 0 0;
+			animation: circuit-glow 3s ease-in-out infinite;
+		}
+
+		@keyframes circuit-glow {
+			0%, 100% {
+				opacity: 0.1;
+			}
+			50% {
+				opacity: 0.3;
+			}
+		}
+
+		/* Terminal-like styling for text area */
+		.form-control {
+			font-family: 'JetBrains Mono', monospace !important;
+		}
+
+		.form-control::before {
+			content: '$ ';
+			color: var(--accent-blue);
+		}
+
+		/* Glowing effects */
+		.glow {
+			animation: glow 2s ease-in-out infinite alternate;
+		}
+
+		@keyframes glow {
+			from {
+				box-shadow: 0 0 20px rgba(88, 166, 255, 0.2);
+			}
+			to {
+				box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+			}
+		}
+
+		/* Enhanced animated grid pattern suggesting data structures */
+		.colorlib-intro::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-image: 
+				/* Main grid */
+				linear-gradient(rgba(88, 166, 255, 0.12) 1px, transparent 1px),
+				linear-gradient(90deg, rgba(88, 166, 255, 0.12) 1px, transparent 1px),
+				/* Secondary grid for data nodes */
+				radial-gradient(circle at 0px 0px, rgba(168, 85, 247, 0.15) 2px, transparent 2px),
+				/* Tertiary connection lines */
+				linear-gradient(45deg, transparent 48%, rgba(124, 58, 237, 0.08) 50%, transparent 52%),
+				linear-gradient(-45deg, transparent 48%, rgba(88, 166, 255, 0.08) 50%, transparent 52%);
+			background-size: 
+				60px 60px,  /* Main grid */
+				60px 60px,  /* Main grid vertical */
+				120px 120px, /* Data nodes */
+				200px 200px, /* Diagonal connections */
+				200px 200px; /* Diagonal connections */
+			animation: 
+				grid-flow 20s linear infinite,
+				data-pulse 8s ease-in-out infinite,
+				grid-shift 15s ease-in-out infinite;
+			pointer-events: none;
+			opacity: 0.6;
+		}
+
+		@keyframes grid-flow {
+			0% {
+				transform: translate(0, 0);
+			}
+			100% {
+				transform: translate(60px, 60px);
+			}
+		}
+
+		@keyframes data-pulse {
+			0%, 100% {
+				opacity: 0.6;
+			}
+			25% {
+				opacity: 0.9;
+			}
+			50% {
+				opacity: 0.4;
+			}
+			75% {
+				opacity: 0.8;
+			}
+		}
+
+		@keyframes grid-shift {
+			0%, 100% {
+				background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+			}
+			25% {
+				background-position: 30px 0, 0 30px, 60px 0, 100px 0, -100px 0;
+			}
+			50% {
+				background-position: 60px 30px, 30px 60px, 120px 60px, 200px 100px, -200px 100px;
+			}
+			75% {
+				background-position: 30px 60px, 60px 30px, 60px 120px, 100px 200px, -100px 200px;
+			}
+		}
+
+		/* Additional data structure visualization */
+		.data-structure-overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: 
+				/* Hash table visualization */
+				repeating-linear-gradient(
+					0deg,
+					transparent,
+					transparent 80px,
+					rgba(88, 166, 255, 0.05) 82px,
+					rgba(88, 166, 255, 0.05) 84px,
+					transparent 86px
+				),
+				/* Binary tree structure */
+				repeating-linear-gradient(
+					45deg,
+					transparent,
+					transparent 100px,
+					rgba(168, 85, 247, 0.04) 102px,
+					rgba(168, 85, 247, 0.04) 104px,
+					transparent 106px
+				),
+				/* Linked list connections */
+				repeating-linear-gradient(
+					90deg,
+					transparent,
+					transparent 150px,
+					rgba(124, 58, 237, 0.06) 152px,
+					rgba(124, 58, 237, 0.06) 156px,
+					transparent 158px
+				);
+			animation: data-flow 12s linear infinite;
+			pointer-events: none;
+			opacity: 0.7;
+		}
+
+		/* Enhanced hero section */
+		#colorlib-hero {
+			background: 
+				linear-gradient(135deg, var(--secondary-dark) 0%, var(--primary-dark) 100%),
+				radial-gradient(ellipse at center, rgba(88, 166, 255, 0.1) 0%, transparent 70%);
+			border-top: 1px solid var(--border-color);
+			border-bottom: 1px solid var(--border-color);
+			position: relative;
+			overflow: hidden;
+		}
+
+		#colorlib-hero::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: 
+				linear-gradient(45deg, transparent 40%, rgba(168, 85, 247, 0.05) 50%, transparent 60%);
+			animation: diagonal-sweep 8s ease-in-out infinite;
+			pointer-events: none;
+		}
+
+		@keyframes diagonal-sweep {
+			0%, 100% {
+				transform: translateX(-100%) translateY(-100%);
+			}
+			50% {
+				transform: translateX(100%) translateY(100%);
+			}
+		}
+
+		/* Circuit board pattern */
+		.services::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 80px;
+			height: 80px;
+			background: 
+				linear-gradient(90deg, var(--accent-blue) 1px, transparent 1px),
+				linear-gradient(0deg, var(--accent-blue) 1px, transparent 1px),
+				radial-gradient(circle at 70% 30%, var(--accent-purple) 2px, transparent 2px);
+			background-size: 15px 15px, 15px 15px, 30px 30px;
+			opacity: 0.1;
+			border-radius: 0 16px 0 0;
+			animation: circuit-glow 3s ease-in-out infinite;
+		}
+
+		@keyframes circuit-glow {
+			0%, 100% {
+				opacity: 0.1;
+			}
+			50% {
+				opacity: 0.3;
+			}
+		}
+
+		/* Enhanced form styling */
+		.qbstp-header-subscribe {
+			position: relative;
+		}
+
+		.form-group textarea {
+			position: relative;
+		}
+
+		.form-group textarea:focus {
+			background: var(--code-bg);
+			box-shadow: 
+				0 0 0 3px rgba(88, 166, 255, 0.1),
+				inset 0 0 20px rgba(88, 166, 255, 0.05);
+		}
+
+		/* Enhanced button group */
+		.form-group .btn {
+			margin: 0 8px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		/* Prediction result enhancement */
+		.prediction-result {
+			background: var(--code-bg);
+			border: 2px solid var(--border-color);
+			border-radius: 12px;
+			padding: 20px;
+			margin: 20px 0;
+		}
+
+		.prediction-result .btn-primary {
+			font-family: 'JetBrains Mono', monospace;
+			background: linear-gradient(135deg, var(--success-green), var(--accent-blue));
+			animation: pulse 2s infinite;
+		}
+
+		/* Fake News Warning Styles */
+		.fake-news-warning {
+			background: linear-gradient(135deg, #dc2626, #ef4444);
+			border: 2px solid #fca5a5;
+			border-radius: 12px;
+			padding: 25px;
+			margin: 20px 0;
+			animation: warningPulse 1.5s infinite, shake 0.5s ease-in-out;
+			box-shadow: 0 0 30px rgba(220, 38, 38, 0.3);
+		}
+
+		.real-news-success {
+			background: linear-gradient(135deg, var(--success-green), #22c55e);
+			border: 2px solid #86efac;
+			border-radius: 12px;
+			padding: 25px;
+			margin: 20px 0;
+			animation: successPulse 2s infinite;
+			box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+		}
+
+		.warning-icon {
+			font-size: 3rem;
+			color: #fca5a5;
+			margin-bottom: 15px;
+			animation: warningBlink 1s infinite;
+		}
+
+		.success-icon {
+			font-size: 3rem;
+			color: #86efac;
+			margin-bottom: 15px;
+		}
+
+		.warning-text {
+			color: #fef2f2;
+			font-size: 1.3rem;
+			font-weight: 700;
+			margin-bottom: 10px;
+			font-family: 'Inter', sans-serif;
+		}
+
+		.warning-details {
+			color: #fca5a5;
+			font-size: 1rem;
+			line-height: 1.6;
+			font-family: 'JetBrains Mono', monospace;
+		}
+
+		.success-text {
+			color: #f0fdf4;
+			font-size: 1.3rem;
+			font-weight: 700;
+			margin-bottom: 10px;
+			font-family: 'Inter', sans-serif;
+		}
+
+		.success-details {
+			color: #86efac;
+			font-size: 1rem;
+			line-height: 1.6;
+			font-family: 'JetBrains Mono', monospace;
+		}
+
+		@keyframes warningPulse {
+			0% {
+				box-shadow: 0 0 30px rgba(220, 38, 38, 0.3);
+			}
+			50% {
+				box-shadow: 0 0 40px rgba(220, 38, 38, 0.6);
+			}
+			100% {
+				box-shadow: 0 0 30px rgba(220, 38, 38, 0.3);
+			}
+		}
+
+		@keyframes successPulse {
+			0% {
+				box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+			}
+			50% {
+				box-shadow: 0 0 30px rgba(34, 197, 94, 0.5);
+			}
+			100% {
+				box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+			}
+		}
+
+		@keyframes warningBlink {
+			0%, 50% {
+				opacity: 1;
+			}
+			51%, 100% {
+				opacity: 0.5;
+			}
+		}
+
+		@keyframes shake {
+			0%, 100% {
+				transform: translateX(0);
+			}
+			25% {
+				transform: translateX(-5px);
+			}
+			75% {
+				transform: translateX(5px);
+			}
+		}
+
+		@keyframes pulse {
+			0% {
+				box-shadow: 0 0 0 0 rgba(88, 166, 255, 0.7);
+			}
+			70% {
+				box-shadow: 0 0 0 10px rgba(88, 166, 255, 0);
+			}
+			100% {
+				box-shadow: 0 0 0 0 rgba(88, 166, 255, 0);
+			}
+		}
+
+		/* Mobile responsiveness */
+		@media (max-width: 768px) {
+			.intro h1 {
+				font-size: 2.5rem;
+			}
+			
+			.services {
+				margin-bottom: 30px;
+			}
+		}
+	</style>
+
+	<!-- Modernizr JS -->
+	<script src="../static/js/modernizr-2.6.2.min.js"></script>
+	<!-- FOR IE9 below -->
+	<!--[if lt IE 9]>
+	<script src="js/respond.min.js"></script>
+	<![endif]-->
+
+	</head>
+	<body>
+		
+	<div class="colorlib-loader"></div>
+
+	<!-- Enhanced CS Background Effects -->
+	<canvas class="matrix-bg" id="matrix"></canvas>
+	<canvas class="circuit-bg" id="circuit"></canvas>
+	<div class="floating-particles"></div>
+	<div class="neural-network"></div>
+
+	<div id="page">
+		<nav class="colorlib-nav" role="navigation">
+			<div class="top-menu">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-2 text-center">
+							<div id="colorlib-logo"><a href="/">FAKE_NEWS</a></div>
+						</div>
+						<div class="col-md-10 text-right menu-1">
+							<ul>
+								<li class="active"><a href="/">home</a></li>
+								<li><a href="https://www.kaggle.com/clmentbisaillon/fake-and-real-news-dataset">dataset</a></li>
+								<li><a href="https://github.com/karthik200129">./notebook</a></li>
+								<li><a class="nav-link" href="{{ url_for('pie_chart') }}">Pie Chart</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+
+		<div class="colorlib-intro">
+			<div class="data-structure-overlay"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2 text-center">
+						<div class="intro">
+							<h1><span>FAKE_NEWS</span>predict</h1>
+							<p>Advanced neural network-based misinformation detection system. Leveraging natural language processing 
+							and machine learning algorithms to classify news authenticity with high precision.</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="row" id="colorlib-footer">
+					<div class="display-tc">
+						<form class="form-inline qbstp-header-subscribe" method="POST" action="">
+							{{ form.hidden_tag() }}
+							<div class="col-three-forth text-center col-md-offset-2">
+								<div class="form-group">
+				                    {% if form.original_text.errors %}
+				                        {{ form.original_text(class="form-control form-control-lg is-invalid", placeholder="// Enter news text for analysis...") }}
+				                        <div class="invalid-feedback">
+				                            {% for error in form.original_text.errors %}
+				                                <span>{{ error }}</span>
+				                            {% endfor %}
+				                        </div>
+				                    {% else %}
+				                        {{ form.original_text(class="form-control glow", id="email", rows="10", placeholder="// Enter news text for analysis...\n// The ML model will process and classify your input") }}
+				                    {% endif %}
+	                			</div>
+                		    </div>
+                		    <div class="col-three-forth text-center col-md-offset-2">
+	                			<div class="form-group">
+	                				<br>
+	               					{{ form.generate(class="btn btn-primary btn-outline", value="GENERATE_SAMPLE()") }}
+	               					{{ form.predict(class="btn btn-primary", value="RUN_PREDICTION()") }}
+	            				</div>
+	            			</div>
+						</form>
+					</div>
+				</div>
+
+				<div class="row" id="colorlib-footer">
+					<div class="col-three-forth text-center">
+						<br>
+						{% if output %}
+							{% if output['prediction'].upper() == 'FAKE' or 'FAKE' in output['prediction'].upper() %}
+								<div class="fake-news-warning">
+									<div class="warning-icon">
+										<i class="icon-warning"></i>
+									</div>
+									<div class="warning-text">
+										⚠️ FAKE NEWS DETECTED ⚠️
+									</div>
+									<div class="warning-details">
+										// CLASSIFICATION: {{ output['prediction'] }}<br>
+										// CONFIDENCE: HIGH<br>
+										// STATUS: POTENTIALLY_MISLEADING<br><br>
+										This content has been flagged as potentially false or misleading by our ML model. 
+										Please verify information from multiple reliable sources before sharing.
+									</div>
+									<br>
+									<a href="#colorlib-services" style="color: #fca5a5; text-decoration: none; font-weight: 600;">
+										<i class="icon-arrow-down"></i> Analyze Processing Details
+									</a>
+								</div>
+							{% else %}
+								<div class="real-news-success">
+									<div class="success-icon">
+										<i class="icon-checkmark"></i>
+									</div>
+									<div class="success-text">
+										✅ AUTHENTIC NEWS VERIFIED
+									</div>
+									<div class="success-details">
+										// CLASSIFICATION: {{ output['prediction'] }}<br>
+										// CONFIDENCE: HIGH<br>
+										// STATUS: LIKELY_AUTHENTIC<br><br>
+										This content appears to be legitimate news based on our analysis. 
+										However, always practice critical thinking when consuming media.
+									</div>
+									<br>
+									<a href="#colorlib-services" style="color: #86efac; text-decoration: none; font-weight: 600;">
+										<i class="icon-arrow-down"></i> View Processing Pipeline
+									</a>
+								</div>
+							{% endif %}
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<aside id="colorlib-hero">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="flexslider">
+							<ul class="slides">
+						   	<li style="background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark)), url(../static/images/img_bg_1.jpg); background-blend-mode: overlay;">
+						   		<div class="overlay" style="background: rgba(88, 166, 255, 0.1);"></div>
+						   	</li>
+						  	</ul>
+					  	</div>
+				  	</div>
+			  	</div>
+		  	</div>
+		</aside>
+
+		<div id="colorlib-services">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2 text-center colorlib-heading animate-box">
+						<h2>ML Pipeline Architecture</h2>
+						<p>Advanced text classification pipeline utilizing natural language processing, feature extraction, 
+						and ensemble learning methods for robust fake news detection with real-time inference capabilities.</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4 text-center animate-box">
+						<div class="services">
+							<span class="icon">
+								<i class="icon-code"></i>
+							</span>
+							<div class="desc">
+								<h3>Input Processing</h3>
+								
+								{%if output %}
+									<p>{{ output['original'] }}</p>
+								{% else %}
+									<p>// Raw text input received
+# Processing natural language data
+input_text = user_input.strip()
+tokenized = nlp.tokenize(input_text)
+print(f"Tokens: {len(tokenized)}")</p>
+								{% endif%}
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4 text-center animate-box">
+						<div class="services">
+							<span class="icon">
+								<i class="icon-cog"></i>
+							</span>
+							<div class="desc">
+								<h3>Feature Engineering</h3>
+								
+								{%if output %}
+									<p>{{ output['preprocessed'] }}</p>
+								{% else %}
+									<p>// Text preprocessing pipeline
+cleaned = preprocess(input_text)
+vectorized = tfidf.transform(cleaned)
+features = extract_features(vectorized)
+print(f"Feature vector: {features.shape}")</p>
+								{% endif%}
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4 text-center animate-box">
+						<div class="services">
+							<span class="icon">
+								<i class="icon-brain"></i>
+							</span>
+							<div class="desc">
+								<h3>Neural Classification</h3>
+								
+								{%if output %}
+									<p>Classification Result: <span class="btn btn-primary"><strong>{{ output['prediction'] }}</strong></span></p>
+								{% else %}
+									<p>// Model inference
+prediction = model.predict(features)
+confidence = model.predict_proba(features)
+result = classify(prediction)
+print(f"Prediction: {result}")</p>
+								{% endif%}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		<footer id="colorlib-footer">
+			<div class="copy">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12 text-center">
+							<p>
+								<small class="block"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | ML Model deployed with <i class="icon-heart3" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">CS Researchers</a>
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></small><br> 
+								<small class="block">Neural Networks: <a href="http://tensorflow.org/" target="_blank">TensorFlow</a>, <a href="http://scikit-learn.org/" target="_blank">Scikit-Learn</a></small>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+
+	<div class="gototop js-top">
+		<a href="#" class="js-gotop"><i class="icon-arrow-up2"></i></a>
+	</div>
+
+	<!-- Enhanced Background Effects Scripts -->
+	<script>
+		// Matrix rain effect
+		const canvas = document.getElementById('matrix');
+		const ctx = canvas.getContext('2d');
+
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+		const binary = '01';
+		const chars = binary.split('');
+		const fontSize = 14;
+		const columns = canvas.width / fontSize;
+		const drops = [];
+
+		for (let x = 0; x < columns; x++) {
+			drops[x] = 1;
+		}
+
+		function draw() {
+			ctx.fillStyle = 'rgba(13, 17, 23, 0.04)';
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			ctx.fillStyle = '#58a6ff';
+			ctx.font = fontSize + 'px JetBrains Mono';
+
+			for (let i = 0; i < drops.length; i++) {
+				const text = chars[Math.floor(Math.random() * chars.length)];
+				ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+				if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+					drops[i] = 0;
+				}
+				drops[i]++;
+			}
+		}
+
+		setInterval(draw, 100);
+
+		// Circuit board background
+		const circuitCanvas = document.getElementById('circuit');
+		const circuitCtx = circuitCanvas.getContext('2d');
+
+		circuitCanvas.width = window.innerWidth;
+		circuitCanvas.height = window.innerHeight;
+
+		function drawCircuit() {
+			circuitCtx.clearRect(0, 0, circuitCanvas.width, circuitCanvas.height);
+			circuitCtx.strokeStyle = '#58a6ff';
+			circuitCtx.lineWidth = 1;
+
+			// Draw random circuit lines
+			for (let i = 0; i < 20; i++) {
+				circuitCtx.beginPath();
+				circuitCtx.moveTo(Math.random() * circuitCanvas.width, Math.random() * circuitCanvas.height);
+				circuitCtx.lineTo(Math.random() * circuitCanvas.width, Math.random() * circuitCanvas.height);
+				circuitCtx.globalAlpha = Math.random() * 0.3;
+				circuitCtx.stroke();
+			}
+
+			// Draw nodes
+			for (let i = 0; i < 15; i++) {
+				circuitCtx.beginPath();
+				circuitCtx.arc(Math.random() * circuitCanvas.width, Math.random() * circuitCanvas.height, 2, 0, Math.PI * 2);
+				circuitCtx.fillStyle = '#a855f7';
+				circuitCtx.globalAlpha = Math.random() * 0.5;
+				circuitCtx.fill();
+			}
+		}
+
+		setInterval(drawCircuit, 3000);
+		drawCircuit();
+
+		// Floating particles
+		function createParticles() {
+			const particleContainer = document.querySelector('.floating-particles');
+			
+			for (let i = 0; i < 50; i++) {
+				const particle = document.createElement('div');
+				particle.className = 'particle';
+				particle.style.left = Math.random() * 100 + '%';
+				particle.style.animationDelay = Math.random() * 15 + 's';
+				particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+				particleContainer.appendChild(particle);
+			}
+		}
+
+		// Neural network connection lines
+		function createNeuralNetwork() {
+			const neuralContainer = document.querySelector('.neural-network');
+			
+			// Create connection lines
+			for (let i = 0; i < 8; i++) {
+				const line = document.createElement('div');
+				line.style.position = 'absolute';
+				line.style.width = '1px';
+				line.style.height = Math.random() * 200 + 50 + 'px';
+				line.style.background = `linear-gradient(to bottom, transparent, ${Math.random() > 0.5 ? '#58a6ff' : '#a855f7'}, transparent)`;
+				line.style.left = Math.random() * 100 + '%';
+				line.style.top = Math.random() * 100 + '%';
+				line.style.opacity = '0.1';
+				line.style.animation = `neural-line ${5 + Math.random() * 5}s ease-in-out infinite`;
+				line.style.transformOrigin = 'center';
+				neuralContainer.appendChild(line);
+			}
+
+			// Create nodes
+			for (let i = 0; i < 12; i++) {
+				const node = document.createElement('div');
+				node.style.position = 'absolute';
+				node.style.width = '8px';
+				node.style.height = '8px';
+				node.style.borderRadius = '50%';
+				node.style.background = Math.random() > 0.5 ? '#58a6ff' : '#a855f7';
+				node.style.left = Math.random() * 100 + '%';
+				node.style.top = Math.random() * 100 + '%';
+				node.style.opacity = '0.3';
+				node.style.animation = `neural-node ${3 + Math.random() * 4}s ease-in-out infinite`;
+				node.style.boxShadow = `0 0 10px ${node.style.background}`;
+				neuralContainer.appendChild(node);
+			}
+		}
+
+		@keyframes neural-line {
+			0%, 100% {
+				opacity: 0.1;
+				transform: scaleY(1) rotate(0deg);
+			}
+			50% {
+				opacity: 0.3;
+				transform: scaleY(1.2) rotate(2deg);
+			}
+		}
+
+		@keyframes neural-node {
+			0%, 100% {
+				opacity: 0.3;
+				transform: scale(1);
+			}
+			50% {
+				opacity: 0.8;
+				transform: scale(1.5);
+			}
+		}
+
+		// Initialize background effects
+		window.addEventListener('load', () => {
+			createParticles();
+			createNeuralNetwork();
+		});
+
+		window.addEventListener('resize', () => {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			circuitCanvas.width = window.innerWidth;
+			circuitCanvas.height = window.innerHeight;
+		});
+	</script>
+	
+	<!-- jQuery -->
+	<script src="static/js/jquery.min.js"></script>
+	<!-- jQuery Easing -->
+	<script src="static/js/jquery.easing.1.3.js"></script>
+	<!-- Bootstrap -->
+	<script src="static/js/bootstrap.min.js"></script>
+	<!-- Waypoints -->
+	<script src="static/js/jquery.waypoints.min.js"></script>
+	<!-- Stellar Parallax -->
+	<script src="static/js/jquery.stellar.min.js"></script>
+	<!-- Flexslider -->
+	<script src="static/js/jquery.flexslider-min.js"></script>
+	<!-- Owl carousel -->
+	<script src="static/js/owl.carousel.min.js"></script>
+	<!-- Magnific Popup -->
+	<script src="static/js/jquery.magnific-popup.min.js"></script>
+	<script src="static/js/magnific-popup-options.js"></script>
+	<!-- Counters -->
+	<script src="static/js/jquery.countTo.js"></script>
+	<!-- Main -->
+	<script src="static/js/main.js"></script>
+
+	</body>
+</html>
